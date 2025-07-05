@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JustificationAbsence extends Model
 {
+    protected $table = 'justifications_absence';
     protected $fillable = [
         'presence_id',
         'justifie_par_user_id',

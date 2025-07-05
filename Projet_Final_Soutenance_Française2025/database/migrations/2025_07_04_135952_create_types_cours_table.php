@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('types_cours', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->unique();
+            $table->timestamps();
         });
     }
 

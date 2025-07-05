@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /** 
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->unique(); // Nom du rôle (ex: Admin, Coordinateur, Enseignant, Étudiant, Parent)
+            $table->timestamps();
         });
     }
 

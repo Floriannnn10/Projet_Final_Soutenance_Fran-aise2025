@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TypeCours extends Model
 {
+    protected $table = 'types_cours';
     protected $fillable = ['nom'];
 
     /**
