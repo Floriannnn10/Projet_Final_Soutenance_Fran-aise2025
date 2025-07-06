@@ -109,7 +109,7 @@ class DetecterDroppes extends Command
             if ($etudiantDroppe) {
                 $etudiantsDroppes[] = [
                     'etudiant' => $etudiant->nom_complet,
-                    'classe' => $etudiant->classe->nom ?? 'N/A',
+                    'classe' => $etudiant->classe->nom ?? 'N/A', 
                     'taux_global' => $tauxGlobal,
                     'matieres_droppees' => $matieresDroppees
                 ];
@@ -145,7 +145,7 @@ class DetecterDroppes extends Command
                 $this->line(($index + 1) . ". <fg=red>{$droppe['etudiant']}</> ({$droppe['classe']})");
                 $this->line("   📊 Taux global : <fg=yellow>{$droppe['taux_global']}%</>");
                 $this->line("   📚 Matières droppées : <fg=red>" . implode(', ', $droppe['matieres_droppees']) . "</>");
-                $this->line("   🎯 Conséquence : <fg=red>Reprendre l'année</>");
+                $this->line("   🎯 Conséquence : <fg=red>Reprendre le(s) module(s) l'année prochaine</>"); 
                 $this->newLine();
             }
         }

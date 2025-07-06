@@ -15,7 +15,7 @@ class TestTauxPresence extends Command
         $this->info('=== TEST NOUVELLE LOGIQUE DE DÉTECTION ===');
 
         $etudiant = Etudiant::first();
-        if (!$etudiant) {
+        if (!$etudiant) { 
             $this->error('Aucun étudiant trouvé');
             return self::FAILURE;
         }

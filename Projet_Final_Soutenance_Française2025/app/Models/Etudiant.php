@@ -220,7 +220,7 @@ class Etudiant extends Model
      * Un étudiant est considéré comme "droppé" si :
      * - Son taux de présence est <= 30% (très faible assiduité)
      * - OU s'il a 0% de présence (même avec absences justifiées) car il ne peut pas être évalué
-     * Un étudiant droppé devra reprendre son année
+     * Un étudiant droppé dans une matière devra reprendre ce module l'année prochaine
      */
     public function estDroppe($matiereId, $dateDebut = null, $dateFin = null): bool
     {
@@ -247,7 +247,7 @@ class Etudiant extends Model
      * Un étudiant est considéré comme "droppé" si :
      * - Son taux de présence global est <= 30% (très faible assiduité)
      * - OU s'il a 0% de présence (même avec absences justifiées) car il ne peut pas être évalué
-     * Un étudiant droppé devra reprendre son année
+     * Un étudiant droppé globalement devra reprendre les modules concernés l'année prochaine
      */
     public function estDroppeGlobal($dateDebut = null, $dateFin = null): bool
     {
@@ -305,7 +305,13 @@ class Etudiant extends Model
             $this->calculerTauxPresenceMatiere($matiereId, $dateDebut, $dateFin) :
             $this->calculerTauxPresenceGlobal($dateDebut, $dateFin);
 
-        $message = "⚠️ ALERTE : L'étudiant {$this->nom_complet} a un taux de présence très faible ({$tauxPresence}%) en {$matiereNom}. Il est considéré comme 'droppé' (taux ≤ 30% ou 0% même avec justifications). L'étudiant devra reprendre son année. Action requise.";
+        if ($matiereId) {
+            // Notification pour une matière spécifique
+            $message = "🚨 ALERTE DROPPÉ : L'étudiant {$this->nom_complet} a un taux de présence de {$tauxPresence}% en {$matiereNom}. Il est considéré comme 'droppé' (taux ≤ 30%). L'étudiant n'est plus autorisé à suivre ce module et devra le reprendre l'année prochaine. Action requise immédiate.";
+        } else {
+            // Notification globale
+            $message = "🚨 ALERTE DROPPÉ GLOBAL : L'étudiant {$this->nom_complet} a un taux de présence global de {$tauxPresence}%. Il est considéré comme 'droppé' dans toutes les matières (taux ≤ 30%). L'étudiant devra reprendre les modules concernés l'année prochaine. Action requise immédiate.";
+        }
 
         // Notifier les parents
         foreach ($this->parents as $parent) {

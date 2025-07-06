@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 use App\Jobs\DetecterEtudiantsDroppes;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+
+Artisan::command('inspire', function () { 
+    $this->comment(Inspiring::quote()); 
+})->purpose('Display an inspiring quote'); 
 
 // Schedule pour la détection automatique des étudiants "droppés"
 Schedule::command('ifran:detecter-droppes --job')
