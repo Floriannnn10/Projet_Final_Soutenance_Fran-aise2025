@@ -19,16 +19,23 @@ class EtudiantResource extends JsonResource
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'nom_complet' => $this->nom_complet,
-            'email' => $this->email,
             'date_naissance' => $this->date_naissance,
-            'telephone' => $this->telephone,
-            'adresse' => $this->adresse,
+            'photo' => $this->photo,
             'classe_id' => $this->classe_id,
-            'classe' => [
-                'id' => $this->classe->id ?? null,
-                'nom' => $this->classe->nom ?? null,
-                'niveau' => $this->classe->niveau ?? null,
-            ],
+            'user_id' => $this->user_id,
+            'classe' => $this->when($this->classe, function () {
+                return [
+                    'id' => $this->classe->id,
+                    'nom' => $this->classe->nom,
+                ];
+            }),
+            'user' => $this->when($this->user, function () {
+                return [
+                    'id' => $this->user->id,
+                    'email' => $this->user->email,
+                    'role' => $this->user->role ? $this->user->role->nom : null,
+                ];
+            }),
             'parents' => $this->whenLoaded('parents', function () {
                 return $this->parents->map(function ($parent) {
                     return [
@@ -38,13 +45,6 @@ class EtudiantResource extends JsonResource
                         'email' => $parent->email,
                     ];
                 });
-            }),
-            'utilisateur' => $this->whenLoaded('utilisateur', function () {
-                return [
-                    'id' => $this->utilisateur->id ?? null,
-                    'email' => $this->utilisateur->email ?? null,
-                    'role' => $this->utilisateur->role->nom ?? null,
-                ];
             }),
             'statistiques' => $this->when($request->include_stats, function () {
                 return [

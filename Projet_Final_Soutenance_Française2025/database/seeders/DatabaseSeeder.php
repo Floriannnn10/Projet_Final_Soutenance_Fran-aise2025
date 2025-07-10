@@ -18,11 +18,7 @@ class DatabaseSeeder extends Seeder
             MatiereSeeder::class,
             TypeCoursSeeder::class,
             UserSeeder::class,
-            PlanningSeeder::class,
             ParentEtudiantSeeder::class,
-            PresenceSeeder::class,
-            JustificationAbsenceSeeder::class,
-            NotificationSeeder::class,
         ]);
 
         $this->command->info('🎉 Base de données IFRAN peuplée avec succès !');
@@ -32,6 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->command->info('   - 8 matières');
         $this->command->info('   - 3 types de cours');
         $this->command->info('   - 38 utilisateurs (1 admin, 2 coordinateurs, 5 enseignants, 20 étudiants, 10 parents)');
-        $this->command->info('   - Plannings pour 2 semaines');
+        $this->command->info('   - Relations parent-étudiant');
     }
 }

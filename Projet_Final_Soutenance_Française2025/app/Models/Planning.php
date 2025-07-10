@@ -132,7 +132,7 @@ class Planning extends Model
      */
     public function getNombrePresentsAttribute(): int
     {
-        return $this->presences()->where('statut', 'present')->count();
+        return $this->presences()->whereHas('status', function($q) { $q->where('name', 'present'); })->count();
     }
 
     /**
@@ -140,7 +140,7 @@ class Planning extends Model
      */
     public function getNombreRetardsAttribute(): int
     {
-        return $this->presences()->where('statut', 'retard')->count();
+        return $this->presences()->whereHas('status', function($q) { $q->where('name', 'retard'); })->count();
     }
 
     /**
@@ -148,7 +148,7 @@ class Planning extends Model
      */
     public function getNombreAbsentsAttribute(): int
     {
-        return $this->presences()->where('statut', 'absent')->count();
+        return $this->presences()->whereHas('status', function($q) { $q->where('name', 'absent'); })->count();
     }
 
     /**

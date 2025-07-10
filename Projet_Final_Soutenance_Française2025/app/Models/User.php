@@ -5,15 +5,17 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -85,11 +87,57 @@ class User extends Authenticatable
     }
 
     /**
-     * Relation avec les notifications
+     * Relation many-to-many avec les notifications via la table pivot
      */
-    public function notifications(): HasMany
+    public function notifications(): BelongsToMany
     {
-        return $this->hasMany(Notification::class);
+        return $this->belongsToMany(Notification::class, 'notification_user')
+                    ->withPivot('read_at')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Relation avec la table pivot pour accéder directement aux données de lecture
+     */
+    public function notificationUsers(): HasMany
+    {
+        return $this->hasMany(NotificationUser::class);
+    }
+
+    /**
+     * Obtenir les notifications non lues
+     */
+    public function notificationsNonLues()
+    {
+        return $this->notifications()->wherePivotNull('read_at');
+    }
+
+    /**
+     * Obtenir les notifications lues
+     */
+    public function notificationsLues()
+    {
+        return $this->notifications()->wherePivotNotNull('read_at');
+    }
+
+    /**
+     * Marquer une notification comme lue
+     */
+    public function marquerNotificationCommeLue(int $notificationId): void
+    {
+        $this->notificationUsers()
+             ->where('notification_id', $notificationId)
+             ->update(['read_at' => now()]);
+    }
+
+    /**
+     * Obtenir le nombre de notifications non lues
+     */
+    public function getNombreNotificationsNonLuesAttribute(): int
+    {
+        return $this->notificationUsers()
+                    ->whereNull('read_at')
+                    ->count();
     }
 
     /**

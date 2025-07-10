@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\AlerteDroppeController;
 use App\Http\Controllers\Api\EtudiantController;
 use App\Http\Controllers\Api\PresenceController;
@@ -21,9 +22,51 @@ use App\Http\Controllers\Api\JustificationAbsenceController;
 |
 */
 
-// Route publique pour l'authentification
+// ============================================================================
+// ROUTES D'AUTHENTIFICATION (PUBLIQUES)
+// ============================================================================
+Route::post('/login', function (Request $request) {
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Authentification réussie',
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+                'token_type' => 'Bearer'
+            ]
+        ]);
+    }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Identifiants invalides'
+    ], 401);
+});
+
+Route::post('/logout', function (Request $request) {
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Déconnexion réussie'
+    ]);
+})->middleware('auth:sanctum');
+
+// Route pour récupérer l'utilisateur connecté
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json([
+        'success' => true,
+        'data' => $request->user()
+    ]);
 });
 
 // Route de santé publique
@@ -51,18 +94,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/notifications', [AlerteDroppeController::class, 'envoyerNotifications']);
     });
 
-    // ============================================================================
-    // ROUTES POUR LES ÉTUDIANTS
-    // ============================================================================
-    Route::prefix('etudiants')->group(function () {
-        Route::get('/', [EtudiantController::class, 'index']);
-        Route::get('/search', [EtudiantController::class, 'search']);
-        Route::post('/', [EtudiantController::class, 'store']);
-        Route::get('/{id}', [EtudiantController::class, 'show']);
-        Route::put('/{id}', [EtudiantController::class, 'update']);
-        Route::delete('/{id}', [EtudiantController::class, 'destroy']);
-        Route::get('/{id}/statistiques', [EtudiantController::class, 'statistiques']);
-    });
+    // Routes pour les étudiants
+    Route::get('/etudiants/search', [EtudiantController::class, 'search']);
+    Route::get('/etudiants/{id}/statistiques', [EtudiantController::class, 'statistiques']);
+    Route::get('/etudiants/{id}', [EtudiantController::class, 'show']);
+    Route::get('/etudiants', [EtudiantController::class, 'index']);
+    Route::post('/etudiants', [EtudiantController::class, 'store']);
+    Route::put('/etudiants/{id}', [EtudiantController::class, 'update']);
+    Route::delete('/etudiants/{id}', [EtudiantController::class, 'destroy']);
 
     // ============================================================================
     // ROUTES POUR LES PRÉSENCES
@@ -139,4 +178,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 
-}); 
+});

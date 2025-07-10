@@ -26,7 +26,10 @@ class ClasseController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $classe = Classe::create($request->all());
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+        ]);
+        $classe = Classe::create($validated);
         return response()->json(['success' => true, 'data' => $classe], 201);
     }
 

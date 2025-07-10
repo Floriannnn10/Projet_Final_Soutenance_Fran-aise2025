@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Etudiant extends Model
 {
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'user_id',
         'classe_id',
@@ -23,9 +28,9 @@ class Etudiant extends Model
     ];
 
     /**
-     * Relation avec l'utilisateur
+     * Relation avec l'utilisateur (user)
      */
-    public function utilisateur(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -44,6 +49,14 @@ class Etudiant extends Model
     public function presences(): HasMany
     {
         return $this->hasMany(Presence::class);
+    }
+
+    /**
+     * Relation avec les justifications d'absence via les présences
+     */
+    public function justifications()
+    {
+        return $this->hasManyThrough(JustificationAbsence::class, Presence::class);
     }
 
     /**
@@ -71,11 +84,13 @@ class Etudiant extends Model
     public function calculerTauxPresenceGlobal($dateDebut = null, $dateFin = null): float
     {
         $baseQuery = $this->presences()
-            ->whereHas('planning', function ($q) use ($dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($dateDebut, $dateFin) {
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             });
 
         $totalCours = $baseQuery->count();
@@ -86,13 +101,17 @@ class Etudiant extends Model
 
         // Exclure les absences justifiées du calcul
         $absencesJustifiees = $this->presences()
-            ->whereHas('planning', function ($q) use ($dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($dateDebut, $dateFin) {
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             })
-            ->where('statut', 'absent')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'absent');
+            })
             ->where('is_justifie', true)
             ->count();
 
@@ -105,23 +124,31 @@ class Etudiant extends Model
         }
 
         $presences = $this->presences()
-            ->whereHas('planning', function ($q) use ($dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($dateDebut, $dateFin) {
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             })
-            ->where('statut', 'present')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'present');
+            })
             ->count();
 
         $retards = $this->presences()
-            ->whereHas('planning', function ($q) use ($dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($dateDebut, $dateFin) {
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             })
-            ->where('statut', 'retard')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'retard');
+            })
             ->count();
 
         // Un retard compte pour 0.5 présence
@@ -136,12 +163,14 @@ class Etudiant extends Model
     public function calculerTauxPresenceMatiere($matiereId, $dateDebut = null, $dateFin = null): float
     {
         $baseQuery = $this->presences()
-            ->whereHas('planning', function ($q) use ($matiereId, $dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($matiereId, $dateDebut, $dateFin) {
                 $q->where('matiere_id', $matiereId);
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             });
 
         $totalCours = $baseQuery->count();
@@ -152,14 +181,18 @@ class Etudiant extends Model
 
         // Exclure les absences justifiées du calcul
         $absencesJustifiees = $this->presences()
-            ->whereHas('planning', function ($q) use ($matiereId, $dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($matiereId, $dateDebut, $dateFin) {
                 $q->where('matiere_id', $matiereId);
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             })
-            ->where('statut', 'absent')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'absent');
+            })
             ->where('is_justifie', true)
             ->count();
 
@@ -172,25 +205,33 @@ class Etudiant extends Model
         }
 
         $presences = $this->presences()
-            ->whereHas('planning', function ($q) use ($matiereId, $dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($matiereId, $dateDebut, $dateFin) {
                 $q->where('matiere_id', $matiereId);
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             })
-            ->where('statut', 'present')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'present');
+            })
             ->count();
 
         $retards = $this->presences()
-            ->whereHas('planning', function ($q) use ($matiereId, $dateDebut, $dateFin) {
+            ->whereHas('courseSession', function ($q) use ($matiereId, $dateDebut, $dateFin) {
                 $q->where('matiere_id', $matiereId);
                 if ($dateDebut && $dateFin) {
-                    $q->whereBetween('date', [$dateDebut, $dateFin]);
+                    $q->whereBetween('start_time', [$dateDebut, $dateFin]);
                 }
-                $q->where('is_annule', false);
+                $q->whereHas('status', function ($statusQuery) {
+                    $statusQuery->where('name', '!=', 'annulee');
+                });
             })
-            ->where('statut', 'retard')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'retard');
+            })
             ->count();
 
         $taux = (($presences + ($retards * 0.5)) / $coursEffectifs) * 100;
@@ -233,12 +274,13 @@ class Etudiant extends Model
      * Vérifier si l'étudiant nécessite une assistance dans une matière
      * Un étudiant nécessite une assistance si :
      * - Son taux de présence est entre 30% et 40% (assiduité faible mais passable)
+     * - ET qu'il n'est pas droppé (taux > 30%)
      * L'étudiant peut passer en classe supérieure mais aura besoin d'un suivi renforcé
      */
     public function necessiteAssistance($matiereId, $dateDebut = null, $dateFin = null): bool
     {
         $tauxPresence = $this->calculerTauxPresenceMatiere($matiereId, $dateDebut, $dateFin);
-        // L'étudiant nécessite une assistance si son taux est entre 30% et 40%
+        // L'étudiant nécessite une assistance si son taux est entre 30% et 40% ET qu'il n'est pas droppé
         return $tauxPresence > 30 && $tauxPresence <= 40;
     }
 
@@ -259,6 +301,7 @@ class Etudiant extends Model
      * Vérifier si l'étudiant nécessite une assistance globale
      * Un étudiant nécessite une assistance globale si :
      * - Son taux de présence global est entre 30% et 40%
+     * - ET qu'il n'est pas droppé globalement (taux > 30%)
      * L'étudiant peut passer en classe supérieure mais aura besoin d'un suivi renforcé
      */
     public function necessiteAssistanceGlobal($dateDebut = null, $dateFin = null): bool
@@ -273,9 +316,11 @@ class Etudiant extends Model
     public function getAbsencesNonJustifiees()
     {
         return $this->presences()
-            ->where('statut', 'absent')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'absent');
+            })
             ->where('is_justifie', false)
-            ->with('planning.matiere', 'planning.typeCours')
+            ->with('courseSession.matiere', 'courseSession.typeCours')
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -286,9 +331,11 @@ class Etudiant extends Model
     public function getAbsencesJustifiees()
     {
         return $this->presences()
-            ->where('statut', 'absent')
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'absent');
+            })
             ->where('is_justifie', true)
-            ->with('planning.matiere', 'planning.typeCours')
+            ->with('courseSession.matiere', 'courseSession.typeCours')
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -313,13 +360,12 @@ class Etudiant extends Model
             $message = "🚨 ALERTE DROPPÉ GLOBAL : L'étudiant {$this->nom_complet} a un taux de présence global de {$tauxPresence}%. Il est considéré comme 'droppé' dans toutes les matières (taux ≤ 30%). L'étudiant devra reprendre les modules concernés l'année prochaine. Action requise immédiate.";
         }
 
+        // Collecter tous les utilisateurs à notifier
+        $userIds = [];
+
         // Notifier les parents
         foreach ($this->parents as $parent) {
-            \App\Models\Notification::create([
-                'user_id' => $parent->id,
-                'message' => $message,
-                'type' => 'droppé',
-            ]);
+            $userIds[] = $parent->id;
         }
 
         // Notifier les coordinateurs
@@ -328,11 +374,7 @@ class Etudiant extends Model
         })->get();
 
         foreach ($coordinateurs as $coordinateur) {
-            \App\Models\Notification::create([
-                'user_id' => $coordinateur->id,
-                'message' => $message,
-                'type' => 'droppé',
-            ]);
+            $userIds[] = $coordinateur->id;
         }
 
         // Notifier les enseignants de la matière (si spécifiée)
@@ -342,12 +384,13 @@ class Etudiant extends Model
             })->get();
 
             foreach ($enseignants as $enseignant) {
-                \App\Models\Notification::create([
-                    'user_id' => $enseignant->user_id,
-                    'message' => $message,
-                    'type' => 'droppé',
-                ]);
+                $userIds[] = $enseignant->user_id;
             }
+        }
+
+        // Créer la notification et l'envoyer à tous les utilisateurs
+        if (!empty($userIds)) {
+            \App\Models\Notification::creerEtEnvoyer($message, 'droppé', array_unique($userIds));
         }
     }
 
@@ -377,15 +420,14 @@ class Etudiant extends Model
             $this->calculerTauxPresenceMatiere($matiereId, $dateDebut, $dateFin) :
             $this->calculerTauxPresenceGlobal($dateDebut, $dateFin);
 
-        $message = "📚 ATTENTION : L'étudiant {$this->nom_complet} a un taux de présence faible ({$tauxPresence}%) en {$matiereNom}. Il peut passer en classe supérieure mais nécessite une assistance et un suivi renforcé. Action recommandée.";
+        $message = "📚 ATTENTION : L'étudiant {$this->nom_complet} a un taux de présence faible ({$tauxPresence}%) en {$matiereNom}. Il peut passer en classe supérieure mais nécessite une assistance et un suivi renforcé pour améliorer son assiduité. Action recommandée.";
+
+        // Collecter tous les utilisateurs à notifier
+        $userIds = [];
 
         // Notifier les parents
         foreach ($this->parents as $parent) {
-            \App\Models\Notification::create([
-                'user_id' => $parent->id,
-                'message' => $message,
-                'type' => 'assistance',
-            ]);
+            $userIds[] = $parent->id;
         }
 
         // Notifier les coordinateurs
@@ -394,11 +436,7 @@ class Etudiant extends Model
         })->get();
 
         foreach ($coordinateurs as $coordinateur) {
-            \App\Models\Notification::create([
-                'user_id' => $coordinateur->id,
-                'message' => $message,
-                'type' => 'assistance',
-            ]);
+            $userIds[] = $coordinateur->id;
         }
 
         // Notifier les enseignants de la matière (si spécifiée)
@@ -408,12 +446,13 @@ class Etudiant extends Model
             })->get();
 
             foreach ($enseignants as $enseignant) {
-                \App\Models\Notification::create([
-                    'user_id' => $enseignant->user_id,
-                    'message' => $message,
-                    'type' => 'assistance',
-                ]);
+                $userIds[] = $enseignant->user_id;
             }
+        }
+
+        // Créer la notification et l'envoyer à tous les utilisateurs
+        if (!empty($userIds)) {
+            \App\Models\Notification::creerEtEnvoyer($message, 'assistance', array_unique($userIds));
         }
     }
 

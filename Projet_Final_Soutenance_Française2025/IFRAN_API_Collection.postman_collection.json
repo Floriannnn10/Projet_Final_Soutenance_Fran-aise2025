@@ -1,0 +1,571 @@
+{
+	"info": {
+		"_postman_id": "ifran-api-collection",
+		"name": "IFRAN API Collection",
+		"description": "Collection complète pour tester l'API IFRAN avec authentification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Authentification",
+			"item": [
+				{
+					"name": "Se connecter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@ifran.fr\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "login"]
+						}
+					}
+				},
+				{
+					"name": "Se déconnecter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "logout"]
+						}
+					}
+				},
+				{
+					"name": "Récupérer l'utilisateur connecté",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/user",
+							"host": ["{{base_url}}"],
+							"path": ["api", "user"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔍 Consultation",
+			"item": [
+				{
+					"name": "Récupérer tous les étudiants",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/etudiants",
+							"host": ["{{base_url}}"],
+							"path": ["api", "etudiants"]
+						}
+					}
+				},
+				{
+					"name": "Récupérer toutes les classes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/classes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes"]
+						}
+					}
+				},
+				{
+					"name": "Récupérer toutes les matières",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/matieres",
+							"host": ["{{base_url}}"],
+							"path": ["api", "matieres"]
+						}
+					}
+				},
+				{
+					"name": "Récupérer toutes les notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/notifications",
+							"host": ["{{base_url}}"],
+							"path": ["api", "notifications"]
+						}
+					}
+				},
+				{
+					"name": "Récupérer toutes les justifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/justifications",
+							"host": ["{{base_url}}"],
+							"path": ["api", "justifications"]
+						}
+					}
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "health"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔍 Recherche",
+			"item": [
+				{
+					"name": "Rechercher un étudiant",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/etudiants/search?q=Dupont",
+							"host": ["{{base_url}}"],
+							"path": ["api", "etudiants", "search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "Dupont"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Récupérer un étudiant par ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/etudiants/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "etudiants", "1"]
+						}
+					}
+				},
+				{
+					"name": "Statistiques d'un étudiant",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/etudiants/1/statistiques",
+							"host": ["{{base_url}}"],
+							"path": ["api", "etudiants", "1", "statistiques"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "➕ Création",
+			"item": [
+				{
+					"name": "Créer un nouvel étudiant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"Dupont\",\n    \"prenom\": \"Jean\",\n    \"email\": \"jean.dupont@student.ifran.fr\",\n    \"date_naissance\": \"2000-01-15\",\n    \"classe_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/etudiants",
+							"host": ["{{base_url}}"],
+							"path": ["api", "etudiants"]
+						}
+					}
+				},
+				{
+					"name": "Créer une nouvelle classe",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"BTS SIO 2ème année\",\n    \"niveau\": \"BTS\",\n    \"annee_scolaire\": \"2024-2025\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/classes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes"]
+						}
+					}
+				},
+				{
+					"name": "Créer une nouvelle notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"titre\": \"Nouvelle notification\",\n    \"contenu\": \"Ceci est un test de notification\",\n    \"type\": \"info\",\n    \"user_ids\": [1, 2, 3]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/notifications",
+							"host": ["{{base_url}}"],
+							"path": ["api", "notifications"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🚨 Alertes",
+			"item": [
+				{
+					"name": "Déclencher détection d'étudiants droppés",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seuil_absence\": 3,\n    \"periode_jours\": 30\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/alertes/detection",
+							"host": ["{{base_url}}"],
+							"path": ["api", "alertes", "detection"]
+						}
+					}
+				},
+				{
+					"name": "Récupérer étudiants droppés",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/alertes/etudiants/droppes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "alertes", "etudiants", "droppes"]
+						}
+					}
+				},
+				{
+					"name": "Envoyer notifications d'alerte",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"etudiant_ids\": [1, 2, 3],\n    \"message\": \"Attention : Absences excessives détectées\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/alertes/notifications",
+							"host": ["{{base_url}}"],
+							"path": ["api", "alertes", "notifications"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "✏️ Modification",
+			"item": [
+				{
+					"name": "Modifier un étudiant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"Dupont\",\n    \"prenom\": \"Jean-Michel\",\n    \"email\": \"jean-michel.dupont@student.ifran.fr\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/etudiants/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "etudiants", "1"]
+						}
+					}
+				},
+				{
+					"name": "Marquer notification comme lue",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/notifications/1/read",
+							"host": ["{{base_url}}"],
+							"path": ["api", "notifications", "1", "read"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🗑️ Suppression",
+			"item": [
+				{
+					"name": "Supprimer un étudiant",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/etudiants/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "etudiants", "1"]
+						}
+					}
+				},
+				{
+					"name": "Supprimer une classe",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/classes/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "1"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "token",
+			"value": "VOTRE_TOKEN_ICI"
+		}
+	]
+}

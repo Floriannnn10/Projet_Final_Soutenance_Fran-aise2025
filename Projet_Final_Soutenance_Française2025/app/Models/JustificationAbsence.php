@@ -48,7 +48,7 @@ class JustificationAbsence extends Model
      */
     public function getCoursAttribute()
     {
-        return $this->presence->planning;
+        return $this->presence->courseSession;
     }
 
     /**
@@ -74,5 +74,10 @@ class JustificationAbsence extends Model
     public function getDateJustificationFormateeAttribute(): string
     {
         return $this->date_justification->format('d/m/Y');
+    }
+
+    public function etudiant()
+    {
+        return $this->belongsTo(\App\Models\Etudiant::class, 'etudiant_id');
     }
 }

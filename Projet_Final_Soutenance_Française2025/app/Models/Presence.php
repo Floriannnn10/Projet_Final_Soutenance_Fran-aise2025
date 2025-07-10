@@ -4,30 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Presence extends Model
 {
     protected $fillable = [
         'etudiant_id',
-        'planning_id',
-        'statut',
+        'course_session_id',
+        'presence_status_id',
         'enregistre_le',
-        'enregistre_par_user_id',
-        'is_justifie'
+        'enregistre_par_user_id'
     ];
 
     protected $casts = [
         'enregistre_le' => 'datetime',
-        'is_justifie' => 'boolean',
     ];
-
-    /**
-     * Constantes pour les statuts de présence
-     */
-    const STATUT_PRESENT = 'present';
-    const STATUT_RETARD = 'retard';
-    const STATUT_ABSENT = 'absent';
 
     /**
      * Relation avec l'étudiant
@@ -38,11 +28,19 @@ class Presence extends Model
     }
 
     /**
-     * Relation avec le planning
+     * Relation avec la session de cours
      */
-    public function planning(): BelongsTo
+    public function courseSession(): BelongsTo
     {
-        return $this->belongsTo(Planning::class);
+        return $this->belongsTo(CourseSession::class);
+    }
+
+    /**
+     * Relation avec le statut de présence
+     */
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(PresenceStatus::class, 'presence_status_id');
     }
 
     /**
@@ -54,19 +52,11 @@ class Presence extends Model
     }
 
     /**
-     * Relation avec la justification d'absence
-     */
-    public function justificationAbsence(): HasOne
-    {
-        return $this->hasOne(JustificationAbsence::class);
-    }
-
-    /**
      * Vérifier si la présence est enregistrée comme présente
      */
     public function isPresent(): bool
     {
-        return $this->statut === self::STATUT_PRESENT;
+        return $this->status->name === 'present';
     }
 
     /**
@@ -74,7 +64,7 @@ class Presence extends Model
      */
     public function isRetard(): bool
     {
-        return $this->statut === self::STATUT_RETARD;
+        return $this->status->name === 'retard';
     }
 
     /**
@@ -82,7 +72,7 @@ class Presence extends Model
      */
     public function isAbsent(): bool
     {
-        return $this->statut === self::STATUT_ABSENT;
+        return $this->status->name === 'absent';
     }
 
     /**
@@ -90,12 +80,7 @@ class Presence extends Model
      */
     public function getStatutLibelleAttribute(): string
     {
-        return match($this->statut) {
-            self::STATUT_PRESENT => 'Présent',
-            self::STATUT_RETARD => 'Retard',
-            self::STATUT_ABSENT => 'Absent',
-            default => 'Inconnu'
-        };
+        return $this->status->display_name ?? 'Inconnu';
     }
 
     /**
@@ -103,10 +88,10 @@ class Presence extends Model
      */
     public function getStatutCssAttribute(): string
     {
-        return match($this->statut) {
-            self::STATUT_PRESENT => 'text-success',
-            self::STATUT_RETARD => 'text-warning',
-            self::STATUT_ABSENT => 'text-danger',
+        return match($this->status->name) {
+            'present' => 'text-success',
+            'retard' => 'text-warning',
+            'absent' => 'text-danger',
             default => 'text-muted'
         };
     }
@@ -116,7 +101,7 @@ class Presence extends Model
      */
     public function peutEtreModifiee(): bool
     {
-        return $this->planning && $this->planning->peutEtreModifie();
+        return $this->courseSession && $this->courseSession->start_time->isAfter(now()->subWeeks(2));
     }
 
     /**
@@ -130,6 +115,36 @@ class Presence extends Model
             if (!$presence->enregistre_le) {
                 $presence->enregistre_le = now();
             }
+        });
+    }
+
+    /**
+     * Scope pour les présences positives
+     */
+    public function scopePresentes($query)
+    {
+        return $query->whereHas('status', function ($q) {
+            $q->where('name', 'present');
+        });
+    }
+
+    /**
+     * Scope pour les absences
+     */
+    public function scopeAbsences($query)
+    {
+        return $query->whereHas('status', function ($q) {
+            $q->where('name', 'absent');
+        });
+    }
+
+    /**
+     * Scope pour les retards
+     */
+    public function scopeRetards($query)
+    {
+        return $query->whereHas('status', function ($q) {
+            $q->where('name', 'retard');
         });
     }
 }

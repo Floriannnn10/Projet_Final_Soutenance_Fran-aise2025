@@ -3,19 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Notification extends Model
 {
     protected $fillable = [
-        'user_id',
         'message',
-        'type',
-        'lue_le'
-    ];
-
-    protected $casts = [
-        'lue_le' => 'datetime',
+        'type'
     ];
 
     /**
@@ -28,27 +23,60 @@ class Notification extends Model
     const TYPE_SYSTEME = 'système';
 
     /**
-     * Relation avec l'utilisateur
+     * Relation many-to-many avec les utilisateurs via la table pivot
      */
-    public function utilisateur(): BelongsTo
+    public function users(): BelongsToMany
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsToMany(User::class, 'notification_user')
+                    ->withPivot('read_at')
+                    ->withTimestamps();
     }
 
     /**
-     * Vérifier si la notification est lue
+     * Relation avec la table pivot pour accéder directement aux données de lecture
      */
-    public function isLue(): bool
+    public function notificationUsers(): HasMany
     {
-        return $this->lue_le !== null;
+        return $this->hasMany(NotificationUser::class);
     }
 
     /**
-     * Marquer la notification comme lue
+     * Vérifier si la notification est lue par un utilisateur spécifique
      */
-    public function marquerCommeLue(): void
+    public function isLueByUser(int $userId): bool
     {
-        $this->update(['lue_le' => now()]);
+        return $this->notificationUsers()
+                    ->where('user_id', $userId)
+                    ->whereNotNull('read_at')
+                    ->exists();
+    }
+
+    /**
+     * Marquer la notification comme lue par un utilisateur
+     */
+    public function marquerCommeLueParUser(int $userId): void
+    {
+        $this->notificationUsers()
+             ->where('user_id', $userId)
+             ->update(['read_at' => now()]);
+    }
+
+    /**
+     * Obtenir le nombre d'utilisateurs qui ont lu cette notification
+     */
+    public function getNombreLecteursAttribute(): int
+    {
+        return $this->notificationUsers()
+                    ->whereNotNull('read_at')
+                    ->count();
+    }
+
+    /**
+     * Obtenir le nombre total d'utilisateurs qui ont reçu cette notification
+     */
+    public function getNombreDestinatairesAttribute(): int
+    {
+        return $this->notificationUsers()->count();
     }
 
     /**
@@ -114,26 +142,34 @@ class Notification extends Model
     }
 
     /**
-     * Scope pour les notifications non lues
-     */
-    public function scopeNonLues($query)
-    {
-        return $query->whereNull('lue_le');
-    }
-
-    /**
-     * Scope pour les notifications lues
-     */
-    public function scopeLues($query)
-    {
-        return $query->whereNotNull('lue_le');
-    }
-
-    /**
      * Scope pour les notifications récentes (7 derniers jours)
      */
     public function scopeRecentes($query)
     {
         return $query->where('created_at', '>=', now()->subDays(7));
+    }
+
+    /**
+     * Créer une notification et l'envoyer à plusieurs utilisateurs
+     */
+    public static function creerEtEnvoyer(string $message, string $type, array $userIds): self
+    {
+        $notification = self::create([
+            'message' => $message,
+            'type' => $type
+        ]);
+
+        // Créer les relations avec les utilisateurs
+        $pivotData = collect($userIds)->map(function ($userId) {
+            return [
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        })->toArray();
+
+        $notification->users()->attach($pivotData);
+
+        return $notification;
     }
 }

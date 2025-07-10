@@ -38,7 +38,31 @@ class PresenceController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $presence = Presence::create($request->all());
+        $user = \Auth::user();
+        // Validation des données reçues
+        $validated = $request->validate([
+            'etudiant_id' => 'required|exists:etudiants,id',
+            'planning_id' => 'required|exists:plannings,id',
+            'statut' => 'required|in:present,absent,retard',
+        ]);
+
+        $planning = \App\Models\Planning::find($validated['planning_id']);
+        if (!$planning || !$planning->typeCours) {
+            return response()->json(['success' => false, 'message' => 'Planning ou type de cours introuvable'], 422);
+        }
+        $typeCours = $planning->typeCours->nom;
+
+        // Restriction d'accès selon le rôle et le type de cours
+        if ($user->isParent() || $user->isEtudiant()) {
+            return response()->json(['success' => false, 'message' => 'Action non autorisée'], 403);
+        }
+        if ($user->isEnseignant() && $typeCours !== \App\Models\TypeCours::PRESENTIEL) {
+            return response()->json(['success' => false, 'message' => 'Les enseignants ne peuvent enregistrer que les présences en présentiel'], 403);
+        }
+        // Le coordinateur et l'admin peuvent tout faire
+
+        $validated['enregistre_par_user_id'] = $user->id;
+        $presence = Presence::create($validated);
         return response()->json(['success' => true, 'data' => $presence], 201);
     }
 
@@ -47,8 +71,28 @@ class PresenceController extends Controller
      */
     public function update(Request $request, $id): JsonResponse
     {
+        $user = \Auth::user();
         $presence = Presence::findOrFail($id);
-        $presence->update($request->all());
+        $planning = $presence->planning;
+        if (!$planning || !$planning->typeCours) {
+            return response()->json(['success' => false, 'message' => 'Planning ou type de cours introuvable'], 422);
+        }
+        $typeCours = $planning->typeCours->nom;
+
+        // Restriction d'accès selon le rôle et le type de cours
+        if ($user->isParent() || $user->isEtudiant()) {
+            return response()->json(['success' => false, 'message' => 'Action non autorisée'], 403);
+        }
+        if ($user->isEnseignant() && $typeCours !== \App\Models\TypeCours::PRESENTIEL) {
+            return response()->json(['success' => false, 'message' => 'Les enseignants ne peuvent modifier que les présences en présentiel'], 403);
+        }
+        // Le coordinateur et l'admin peuvent tout faire
+
+        $validated = $request->validate([
+            'statut' => 'sometimes|in:present,absent,retard',
+        ]);
+        $validated['enregistre_par_user_id'] = $user->id;
+        $presence->update($validated);
         return response()->json(['success' => true, 'data' => $presence]);
     }
 
