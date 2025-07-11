@@ -1,0 +1,817 @@
+[
+  {
+    "name": "Notifications",
+    "item": [
+      {
+        "name": "Lister les notifications",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/notifications", "host": ["{{base_url}}"], "path": ["api", "notifications"] }
+        }
+      },
+      {
+        "name": "Créer une notification",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"titre\": \"Cours annulé\",\n  \"message\": \"Le cours de mathématiques du 15/12/2024 est annulé\",\n  \"type\": \"info\",\n  \"destinataire_type\": \"etudiant\",\n  \"destinataire_id\": 1,\n  \"urgence\": \"normale\",\n  \"date_expiration\": \"2024-12-20\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/notifications", "host": ["{{base_url}}"], "path": ["api", "notifications"] }
+        }
+      },
+      {
+        "name": "Afficher une notification",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"] }
+        }
+      },
+      {
+        "name": "Marquer comme lue",
+        "request": {
+          "method": "PATCH",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/notifications/1/lue", "host": ["{{base_url}}"], "path": ["api", "notifications", "1", "lue"] }
+        }
+      },
+      {
+        "name": "Supprimer une notification",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"] }
+        }
+      },
+      {
+        "name": "Notifications non lues",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/notifications/non-lues", "host": ["{{base_url}}"], "path": ["api", "notifications", "non-lues"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Justifications",
+    "item": [
+      {
+        "name": "Lister les justifications",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/justifications", "host": ["{{base_url}}"], "path": ["api", "justifications"] }
+        }
+      },
+      {
+        "name": "Créer une justification",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"etudiant_id\": 1,\n  \"session_id\": 1,\n  \"type\": \"maladie\",\n  \"motif\": \"Consultation médicale\",\n  \"date_debut\": \"2024-12-15\",\n  \"date_fin\": \"2024-12-15\",\n  \"justifie\": true,\n  \"document_url\": \"https://storage.ifran.com/justifications/cert_medical_001.pdf\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/justifications", "host": ["{{base_url}}"], "path": ["api", "justifications"] }
+        }
+      },
+      {
+        "name": "Afficher une justification",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/justifications/1", "host": ["{{base_url}}"], "path": ["api", "justifications", "1"] }
+        }
+      },
+      {
+        "name": "Valider une justification",
+        "request": {
+          "method": "PATCH",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"valide\": true,\n  \"commentaire\": \"Justification acceptée\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/justifications/1/valider", "host": ["{{base_url}}"], "path": ["api", "justifications", "1", "valider"] }
+        }
+      },
+      {
+        "name": "Rejeter une justification",
+        "request": {
+          "method": "PATCH",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"valide\": false,\n  \"commentaire\": \"Document insuffisant\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/justifications/1/rejeter", "host": ["{{base_url}}"], "path": ["api", "justifications", "1", "rejeter"] }
+        }
+      },
+      {
+        "name": "Lister par étudiant",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/justifications/etudiant/1", "host": ["{{base_url}}"], "path": ["api", "justifications", "etudiant", "1"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Utilisateurs",
+    "item": [
+      {
+        "name": "Lister les utilisateurs",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/utilisateurs", "host": ["{{base_url}}"], "path": ["api", "utilisateurs"] }
+        }
+      },
+      {
+        "name": "Créer un utilisateur",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Martin\",\n  \"prenom\": \"Pierre\",\n  \"email\": \"pierre.martin@ifran.com\",\n  \"password\": \"password123\",\n  \"role_id\": 2,\n  \"telephone\": \"0123456789\",\n  \"actif\": true\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/utilisateurs", "host": ["{{base_url}}"], "path": ["api", "utilisateurs"] }
+        }
+      },
+      {
+        "name": "Afficher un utilisateur",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/utilisateurs/1", "host": ["{{base_url}}"], "path": ["api", "utilisateurs", "1"] }
+        }
+      },
+      {
+        "name": "Mettre à jour un utilisateur",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Martin\",\n  \"prenom\": \"Pierre-Antoine\",\n  \"email\": \"pierre-antoine.martin@ifran.com\",\n  \"telephone\": \"0123456788\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/utilisateurs/1", "host": ["{{base_url}}"], "path": ["api", "utilisateurs", "1"] }
+        }
+      },
+      {
+        "name": "Supprimer un utilisateur",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/utilisateurs/1", "host": ["{{base_url}}"], "path": ["api", "utilisateurs", "1"] }
+        }
+      },
+      {
+        "name": "Changer le mot de passe",
+        "request": {
+          "method": "PATCH",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"current_password\": \"password123\",\n  \"new_password\": \"newpassword123\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/utilisateurs/1/password", "host": ["{{base_url}}"], "path": ["api", "utilisateurs", "1", "password"] }
+        }
+      },
+      {
+        "name": "Lister par rôle",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/utilisateurs/role/2", "host": ["{{base_url}}"], "path": ["api", "utilisateurs", "role", "2"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Enseignants",
+    "item": [
+      {
+        "name": "Lister les enseignants",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/enseignants", "host": ["{{base_url}}"], "path": ["api", "enseignants"] }
+        }
+      },
+      {
+        "name": "Créer un enseignant",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Durand\",\n  \"prenom\": \"Marie\",\n  \"email\": \"marie.durand@ifran.com\",\n  \"specialite\": \"Mathématiques\",\n  \"telephone\": \"0123456789\",\n  \"bureau\": \"B205\",\n  \"actif\": true\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/enseignants", "host": ["{{base_url}}"], "path": ["api", "enseignants"] }
+        }
+      },
+      {
+        "name": "Afficher un enseignant",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/enseignants/1", "host": ["{{base_url}}"], "path": ["api", "enseignants", "1"] }
+        }
+      },
+      {
+        "name": "Mettre à jour un enseignant",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Durand\",\n  \"prenom\": \"Marie-Claire\",\n  \"specialite\": \"Mathématiques Appliquées\",\n  \"bureau\": \"B206\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/enseignants/1", "host": ["{{base_url}}"], "path": ["api", "enseignants", "1"] }
+        }
+      },
+      {
+        "name": "Supprimer un enseignant",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/enseignants/1", "host": ["{{base_url}}"], "path": ["api", "enseignants", "1"] }
+        }
+      },
+      {
+        "name": "Matières d'un enseignant",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/enseignants/1/matieres", "host": ["{{base_url}}"], "path": ["api", "enseignants", "1", "matieres"] }
+        }
+      },
+      {
+        "name": "Planning d'un enseignant",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/enseignants/1/planning", "host": ["{{base_url}}"], "path": ["api", "enseignants", "1", "planning"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Parents",
+    "item": [
+      {
+        "name": "Lister les parents",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/parents", "host": ["{{base_url}}"], "path": ["api", "parents"] }
+        }
+      },
+      {
+        "name": "Créer un parent",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Michel\",\n  \"email\": \"michel.dupont@parent.com\",\n  \"telephone\": \"0123456789\",\n  \"relation\": \"père\",\n  \"adresse\": \"123 Rue de la Paix, 75001 Paris\",\n  \"actif\": true\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/parents", "host": ["{{base_url}}"], "path": ["api", "parents"] }
+        }
+      },
+      {
+        "name": "Afficher un parent",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/parents/1", "host": ["{{base_url}}"], "path": ["api", "parents", "1"] }
+        }
+      },
+      {
+        "name": "Mettre à jour un parent",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Michel-Antoine\",\n  \"email\": \"michel-antoine.dupont@parent.com\",\n  \"telephone\": \"0123456788\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/parents/1", "host": ["{{base_url}}"], "path": ["api", "parents", "1"] }
+        }
+      },
+      {
+        "name": "Supprimer un parent",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/parents/1", "host": ["{{base_url}}"], "path": ["api", "parents", "1"] }
+        }
+      },
+      {
+        "name": "Enfants d'un parent",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/parents/1/enfants", "host": ["{{base_url}}"], "path": ["api", "parents", "1", "enfants"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Coordinateurs",
+    "item": [
+      {
+        "name": "Lister les coordinateurs",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/coordinateurs", "host": ["{{base_url}}"], "path": ["api", "coordinateurs"] }
+        }
+      },
+      {
+        "name": "Créer un coordinateur",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Lemoine\",\n  \"prenom\": \"Sophie\",\n  \"email\": \"sophie.lemoine@ifran.com\",\n  \"telephone\": \"0123456789\",\n  \"bureau\": \"A301\",\n  \"departement\": \"Informatique\",\n  \"actif\": true\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/coordinateurs", "host": ["{{base_url}}"], "path": ["api", "coordinateurs"] }
+        }
+      },
+      {
+        "name": "Afficher un coordinateur",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/coordinateurs/1", "host": ["{{base_url}}"], "path": ["api", "coordinateurs", "1"] }
+        }
+      },
+      {
+        "name": "Mettre à jour un coordinateur",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Lemoine\",\n  \"prenom\": \"Sophie-Marie\",\n  \"bureau\": \"A302\",\n  \"departement\": \"Informatique et Mathématiques\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/coordinateurs/1", "host": ["{{base_url}}"], "path": ["api", "coordinateurs", "1"] }
+        }
+      },
+      {
+        "name": "Supprimer un coordinateur",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/coordinateurs/1", "host": ["{{base_url}}"], "path": ["api", "coordinateurs", "1"] }
+        }
+      },
+      {
+        "name": "Classes d'un coordinateur",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/coordinateurs/1/classes", "host": ["{{base_url}}"], "path": ["api", "coordinateurs", "1", "classes"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Plannings",
+    "item": [
+      {
+        "name": "Lister les plannings",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/plannings", "host": ["{{base_url}}"], "path": ["api", "plannings"] }
+        }
+      },
+      {
+        "name": "Créer un planning",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"classe_id\": 1,\n  \"matiere_id\": 1,\n  \"enseignant_id\": 1,\n  \"type_cours_id\": 1,\n  \"jour_semaine\": \"lundi\",\n  \"heure_debut\": \"08:00\",\n  \"heure_fin\": \"10:00\",\n  \"salle\": \"A101\",\n  \"actif\": true\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/plannings", "host": ["{{base_url}}"], "path": ["api", "plannings"] }
+        }
+      },
+      {
+        "name": "Afficher un planning",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/plannings/1", "host": ["{{base_url}}"], "path": ["api", "plannings", "1"] }
+        }
+      },
+      {
+        "name": "Mettre à jour un planning",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"jour_semaine\": \"mardi\",\n  \"heure_debut\": \"09:00\",\n  \"heure_fin\": \"11:00\",\n  \"salle\": \"A102\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/plannings/1", "host": ["{{base_url}}"], "path": ["api", "plannings", "1"] }
+        }
+      },
+      {
+        "name": "Supprimer un planning",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/plannings/1", "host": ["{{base_url}}"], "path": ["api", "plannings", "1"] }
+        }
+      },
+      {
+        "name": "Planning par classe",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/plannings/classe/1", "host": ["{{base_url}}"], "path": ["api", "plannings", "classe", "1"] }
+        }
+      },
+      {
+        "name": "Planning par enseignant",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/plannings/enseignant/1", "host": ["{{base_url}}"], "path": ["api", "plannings", "enseignant", "1"] }
+        }
+      },
+      {
+        "name": "Planning par salle",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/plannings/salle/A101", "host": ["{{base_url}}"], "path": ["api", "plannings", "salle", "A101"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Rôles",
+    "item": [
+      {
+        "name": "Lister les rôles",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"] }
+        }
+      },
+      {
+        "name": "Créer un rôle",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Secrétaire\",\n  \"description\": \"Gestion administrative\",\n  \"permissions\": [\"read_students\", \"create_notifications\", \"manage_schedules\"],\n  \"actif\": true\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"] }
+        }
+      },
+      {
+        "name": "Afficher un rôle",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"] }
+        }
+      },
+      {
+        "name": "Mettre à jour un rôle",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Secrétaire Principal\",\n  \"description\": \"Gestion administrative avancée\",\n  \"permissions\": [\"read_students\", \"create_notifications\", \"manage_schedules\", \"generate_reports\"]\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"] }
+        }
+      },
+      {
+        "name": "Supprimer un rôle",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"] }
+        }
+      },
+      {
+        "name": "Permissions d'un rôle",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/roles/1/permissions", "host": ["{{base_url}}"], "path": ["api", "roles", "1", "permissions"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Types de cours",
+    "item": [
+      {
+        "name": "Lister les types de cours",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/types-cours", "host": ["{{base_url}}"], "path": ["api", "types-cours"] }
+        }
+      },
+      {
+        "name": "Créer un type de cours",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Cours Magistral\",\n  \"code\": \"CM\",\n  \"description\": \"Cours théorique en amphithéâtre\",\n  \"duree_defaut\": 120,\n  \"couleur\": \"#3498db\",\n  \"actif\": true\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/types-cours", "host": ["{{base_url}}"], "path": ["api", "types-cours"] }
+        }
+      },
+      {
+        "name": "Afficher un type de cours",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/types-cours/1", "host": ["{{base_url}}"], "path": ["api", "types-cours", "1"] }
+        }
+      },
+      {
+        "name": "Mettre à jour un type de cours",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nom\": \"Cours Magistral Avancé\",\n  \"description\": \"Cours théorique approfondi\",\n  \"duree_defaut\": 180,\n  \"couleur\": \"#2980b9\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/types-cours/1", "host": ["{{base_url}}"], "path": ["api", "types-cours", "1"] }
+        }
+      },
+      {
+        "name": "Supprimer un type de cours",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/types-cours/1", "host": ["{{base_url}}"], "path": ["api", "types-cours", "1"] }
+        }
+      },
+      {
+        "name": "Statistiques par type",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/types-cours/statistiques", "host": ["{{base_url}}"], "path": ["api", "types-cours", "statistiques"] }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Statistiques et Recherche",
+    "item": [
+      {
+        "name": "Tableau de bord général",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/statistiques/dashboard", "host": ["{{base_url}}"], "path": ["api", "statistiques", "dashboard"] }
+        }
+      },
+      {
+        "name": "Statistiques par période",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/statistiques/periode?debut=2024-01-01&fin=2024-12-31", "host": ["{{base_url}}"], "path": ["api", "statistiques", "periode"], "query": [{"key": "debut", "value": "2024-01-01"}, {"key": "fin", "value": "2024-12-31"}] }
+        }
+      },
+      {
+        "name": "Recherche globale",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/recherche?q=martin&type=all", "host": ["{{base_url}}"], "path": ["api", "recherche"], "query": [{"key": "q", "value": "martin"}, {"key": "type", "value": "all"}] }
+        }
+      },
+      {
+        "name": "Recherche avancée",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"criteres\": {\n    \"nom\": \"Martin\",\n    \"classe_id\": 1,\n    \"date_debut\": \"2024-01-01\",\n    \"date_fin\": \"2024-12-31\",\n    \"actif\": true\n  },\n  \"tri\": \"nom\",\n  \"ordre\": \"asc\",\n  \"limite\": 50\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/recherche/avancee", "host": ["{{base_url}}"], "path": ["api", "recherche", "avancee"] }
+        }
+      },
+      {
+        "name": "Rapport d'assiduité",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/statistiques/assiduite?classe_id=1&periode=semestre", "host": ["{{base_url}}"], "path": ["api", "statistiques", "assiduite"], "query": [{"key": "classe_id", "value": "1"}, {"key": "periode", "value": "semestre"}] }
+        }
+      },
+      {
+        "name": "Rapport de performances",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/statistiques/performances?enseignant_id=1", "host": ["{{base_url}}"], "path": ["api", "statistiques", "performances"], "query": [{"key": "enseignant_id", "value": "1"}] }
+        }
+      },
+      {
+        "name": "Exporter données",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"type\": \"etudiants\",\n  \"format\": \"xlsx\",\n  \"filtres\": {\n    \"classe_id\": 1,\n    \"actif\": true\n  }\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/export", "host": ["{{base_url}}"], "path": ["api", "export"] }
+        }
+      },
+      {
+        "name": "Alertes système",
+        "request": {
+          "method": "GET",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+          ],
+          "url": { "raw": "{{base_url}}/api/alertes", "host": ["{{base_url}}"], "path": ["api", "alertes"] }
+        }
+      }
+    ]
+  }
+]
