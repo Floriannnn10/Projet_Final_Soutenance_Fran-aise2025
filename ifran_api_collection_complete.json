@@ -1,0 +1,157 @@
+{
+  "info": {
+    "_postman_id": "ifran-api-collection-complete",
+    "name": "IFRAN API Collection (Complet)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentification",
+      "item": [
+        {
+          "name": "Connexion",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@ifran.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Déconnexion",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/auth/logout", "host": ["{{base_url}}"], "path": ["api", "auth", "logout"] }
+          }
+        },
+        {
+          "name": "Utilisateur connecté",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/auth/me", "host": ["{{base_url}}"], "path": ["api", "auth", "me"] }
+          }
+        },
+        {
+          "name": "Rafraîchir le token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/auth/refresh", "host": ["{{base_url}}"], "path": ["api", "auth", "refresh"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Étudiants",
+      "item": [
+        {
+          "name": "Lister les étudiants",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/etudiants", "host": ["{{base_url}}"], "path": ["api", "etudiants"] }
+          }
+        },
+        {
+          "name": "Créer un étudiant",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Jean\",\n  \"email\": \"jean.dupont@etudiant.ifran.com\",\n  \"matricule\": \"ETU2024001\",\n  \"classe_id\": 1,\n  \"date_naissance\": \"2000-05-15\",\n  \"telephone\": \"0612345678\",\n  \"adresse\": \"123 Rue de la Paix, 75001 Paris\",\n  \"actif\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/etudiants", "host": ["{{base_url}}"], "path": ["api", "etudiants"] }
+          }
+        },
+        {
+          "name": "Afficher un étudiant",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/etudiants/1", "host": ["{{base_url}}"], "path": ["api", "etudiants", "1"] }
+          }
+        },
+        {
+          "name": "Mettre à jour un étudiant",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Jean-Pierre\",\n  \"email\": \"jean-pierre.dupont@etudiant.ifran.com\",\n  \"telephone\": \"0612345679\",\n  \"adresse\": \"124 Rue de la Paix, 75001 Paris\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/etudiants/1", "host": ["{{base_url}}"], "path": ["api", "etudiants", "1"] }
+          }
+        },
+        {
+          "name": "Supprimer un étudiant",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/etudiants/1", "host": ["{{base_url}}"], "path": ["api", "etudiants", "1"] }
+          }
+        },
+        {
+          "name": "Rechercher des étudiants",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/etudiants/recherche?q=Jean&classe_id=1", "host": ["{{base_url}}"], "path": ["api", "etudiants", "recherche"], "query": [{"key": "q", "value": "Jean"}, {"key": "classe_id", "value": "1"}] }
+          }
+        },
+        {
+          "name": "Lister par classe",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/etudiants/classe/1", "host": ["{{base_url}}"], "path": ["api", "etudiants", "classe", "1"] }
+          }
+        },
+        {
+          "name": "Statistiques étudiants",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/etudiants/statistiques", "host": ["{{base_url}}"], "path": ["api", "etudiants", "statistiques"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ]
+}
