@@ -1,0 +1,408 @@
+{
+  "info": {
+    "_postman_id": "ifran-api-collection-latest",
+    "name": "IFRAN API Collection (Complet)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Session Statuses",
+      "item": [
+        {
+          "name": "Lister les statuts",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/session-statuses", "host": ["{{base_url}}"], "path": ["api", "session-statuses"] }
+          }
+        },
+        {
+          "name": "Créer un statut",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"planifiée\",\n  \"description\": \"Session planifiée\",\n  \"couleur\": \"#3498db\",\n  \"actif\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/session-statuses", "host": ["{{base_url}}"], "path": ["api", "session-statuses"] }
+          }
+        },
+        {
+          "name": "Afficher un statut",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/session-statuses/1", "host": ["{{base_url}}"], "path": ["api", "session-statuses", "1"] }
+          }
+        },
+        {
+          "name": "Mettre à jour un statut",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"en cours\",\n  \"description\": \"Session en cours\",\n  \"couleur\": \"#f39c12\",\n  \"actif\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/session-statuses/1", "host": ["{{base_url}}"], "path": ["api", "session-statuses", "1"] }
+          }
+        },
+        {
+          "name": "Supprimer un statut",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/session-statuses/1", "host": ["{{base_url}}"], "path": ["api", "session-statuses", "1"] }
+          }
+        },
+        {
+          "name": "Activer un statut",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/session-statuses/1/activer", "host": ["{{base_url}}"], "path": ["api", "session-statuses", "1", "activer"] }
+          }
+        },
+        {
+          "name": "Désactiver un statut",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/session-statuses/1/desactiver", "host": ["{{base_url}}"], "path": ["api", "session-statuses", "1", "desactiver"] }
+          }
+        },
+        {
+          "name": "Lister les statuts actifs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/session-statuses/actifs", "host": ["{{base_url}}"], "path": ["api", "session-statuses", "actifs"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Semesters",
+      "item": [
+        {
+          "name": "Lister les semestres",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/semesters", "host": ["{{base_url}}"], "path": ["api", "semesters"] }
+          }
+        },
+        {
+          "name": "Créer un semestre",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"libelle\": \"Semestre 1\",\n  \"academic_year_id\": 1,\n  \"date_debut\": \"2024-09-01\",\n  \"date_fin\": \"2025-01-31\",\n  \"actif\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/semesters", "host": ["{{base_url}}"], "path": ["api", "semesters"] }
+          }
+        },
+        {
+          "name": "Afficher un semestre",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/semesters/1", "host": ["{{base_url}}"], "path": ["api", "semesters", "1"] }
+          }
+        },
+        {
+          "name": "Mettre à jour un semestre",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"libelle\": \"Semestre 1 - MAJ\",\n  \"date_debut\": \"2024-09-15\",\n  \"date_fin\": \"2025-02-15\",\n  \"actif\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/semesters/1", "host": ["{{base_url}}"], "path": ["api", "semesters", "1"] }
+          }
+        },
+        {
+          "name": "Supprimer un semestre",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/semesters/1", "host": ["{{base_url}}"], "path": ["api", "semesters", "1"] }
+          }
+        },
+        {
+          "name": "Activer un semestre",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/semesters/1/activer", "host": ["{{base_url}}"], "path": ["api", "semesters", "1", "activer"] }
+          }
+        },
+        {
+          "name": "Désactiver un semestre",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/semesters/1/desactiver", "host": ["{{base_url}}"], "path": ["api", "semesters", "1", "desactiver"] }
+          }
+        },
+        {
+          "name": "Lister par année académique",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/semesters/annee/1", "host": ["{{base_url}}"], "path": ["api", "semesters", "annee", "1"] }
+          }
+        },
+        {
+          "name": "Statistiques semestres",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/semesters/statistiques", "host": ["{{base_url}}"], "path": ["api", "semesters", "statistiques"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic Years",
+      "item": [
+        {
+          "name": "Lister les années académiques",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/academic-years", "host": ["{{base_url}}"], "path": ["api", "academic-years"] }
+          }
+        },
+        {
+          "name": "Créer une année académique",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"libelle\": \"2024-2025\",\n  \"date_debut\": \"2024-09-01\",\n  \"date_fin\": \"2025-08-31\",\n  \"actif\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/academic-years", "host": ["{{base_url}}"], "path": ["api", "academic-years"] }
+          }
+        },
+        {
+          "name": "Afficher une année académique",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/academic-years/1", "host": ["{{base_url}}"], "path": ["api", "academic-years", "1"] }
+          }
+        },
+        {
+          "name": "Mettre à jour une année académique",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"libelle\": \"2024-2025 - MAJ\",\n  \"date_debut\": \"2024-09-15\",\n  \"date_fin\": \"2025-09-15\",\n  \"actif\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/academic-years/1", "host": ["{{base_url}}"], "path": ["api", "academic-years", "1"] }
+          }
+        },
+        {
+          "name": "Supprimer une année académique",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/academic-years/1", "host": ["{{base_url}}"], "path": ["api", "academic-years", "1"] }
+          }
+        },
+        {
+          "name": "Activer une année académique",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/academic-years/1/activer", "host": ["{{base_url}}"], "path": ["api", "academic-years", "1", "activer"] }
+          }
+        },
+        {
+          "name": "Statistiques années académiques",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/academic-years/statistiques", "host": ["{{base_url}}"], "path": ["api", "academic-years", "statistiques"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Course Sessions",
+      "item": [
+        {
+          "name": "Lister les sessions de cours",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/course-sessions", "host": ["{{base_url}}"], "path": ["api", "course-sessions"] }
+          }
+        },
+        {
+          "name": "Créer une session de cours",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"planning_id\": 1,\n  \"date_session\": \"2024-12-15\",\n  \"heure_debut\": \"08:00\",\n  \"heure_fin\": \"10:00\",\n  \"academic_year_id\": 1,\n  \"semester_id\": 1,\n  \"session_status_id\": 1,\n  \"salle\": \"Salle A101\",\n  \"notes\": \"Cours de mathématiques\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/course-sessions", "host": ["{{base_url}}"], "path": ["api", "course-sessions"] }
+          }
+        },
+        {
+          "name": "Afficher une session de cours",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/course-sessions/1", "host": ["{{base_url}}"], "path": ["api", "course-sessions", "1"] }
+          }
+        },
+        {
+          "name": "Mettre à jour une session de cours",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date_session\": \"2024-12-16\",\n  \"heure_debut\": \"09:00\",\n  \"heure_fin\": \"11:00\",\n  \"session_status_id\": 2,\n  \"salle\": \"Salle A102\",\n  \"notes\": \"Cours de mathématiques - Mise à jour\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/course-sessions/1", "host": ["{{base_url}}"], "path": ["api", "course-sessions", "1"] }
+          }
+        },
+        {
+          "name": "Supprimer une session de cours",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/course-sessions/1", "host": ["{{base_url}}"], "path": ["api", "course-sessions", "1"] }
+          }
+        },
+        {
+          "name": "Changer le statut d'une session",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_status_id\": 2\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/course-sessions/1/statut", "host": ["{{base_url}}"], "path": ["api", "course-sessions", "1", "statut"] }
+          }
+        },
+        {
+          "name": "Lister par planning",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/course-sessions/planning/1", "host": ["{{base_url}}"], "path": ["api", "course-sessions", "planning", "1"] }
+          }
+        },
+        {
+          "name": "Lister par statut",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/course-sessions/statut/1", "host": ["{{base_url}}"], "path": ["api", "course-sessions", "statut", "1"] }
+          }
+        },
+        {
+          "name": "Statistiques sessions de cours",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/course-sessions/statistiques", "host": ["{{base_url}}"], "path": ["api", "course-sessions", "statistiques"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ]
+}
